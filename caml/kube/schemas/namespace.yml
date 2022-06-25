@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: builder
+  labels:
+    name: builder
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docker-config
+  namespace: builder
+data:
+  config.json: |
+    { "credsStore": "ecr-login" }
