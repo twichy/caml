@@ -4,7 +4,7 @@ from kubernetes.client.exceptions import ApiException
 from caml.kube.tasks.base_task import BaseKubeTask
 
 
-class KubeCamlDeployer(BaseKubeTask):
+class KubeTaskCamlDeployer(BaseKubeTask):
     def __init__(self, config=None):
         super().__init__(config)
 

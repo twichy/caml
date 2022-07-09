@@ -1,3 +1,3 @@
 [flake8]
-exclude = .git, __pycache__, venv, dist, build, */__init__.py, sandbox.py, cli-sandbox.py, storage_client_factory.py, load_snippets
+exclude = .git, __pycache__, venv, dist, build, */__init__.py, sandbox.py
 max-line-length = 120

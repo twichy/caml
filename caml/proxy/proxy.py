@@ -1,14 +1,6 @@
 import json
 import requests
 
-from collections import OrderedDict
-from cnvrgv2._version import __version__
-from cnvrgv2.config import error_messages
-from cnvrgv2.errors import CnvrgError, CnvrgHttpError, ExceptionsConfig
-from cnvrgv2.config import Config
-from cnvrgv2.utils.url_utils import urljoin
-from cnvrgv2.utils.json_api_format import JAF
-
 
 class HTTP:
     GET = "GET"
@@ -19,16 +11,10 @@ class HTTP:
 
 
 class Proxy:
-    def __init__(self, context=None, domain=None, token=None, is_capi=True):
-        # Those are using for User/Org clients that do not have context
-        self._domain = domain
-        self._token = token
-        self._is_capi = is_capi
-
-        if context:
-            self._domain = context.domain
-            self._token = context.token
-            self._is_capi = context.is_capi
+    def __init__(self, context=None):
+        self._domain = context.domain
+        self._token = context.token
+        self._is_capi = context.is_capi
 
     def call_api(self, route, http_method, payload=None, files_list=None, headers=None):
         """

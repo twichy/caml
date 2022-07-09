@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: '{DEPLOYMENT_NAME}'
+  labels:
+    app: '{APP_LABEL}'
+    project: '{PROJECT_LABEL}'
+    component: '{COMPONENT_LABEL}'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: '{APP_LABEL}'
+      project: '{PROJECT_LABEL}'
+      component: '{COMPONENT_LABEL}'
+  template:
+    metadata:
+      labels:
+        app: '{APP_LABEL}'
+        project: '{PROJECT_LABEL}'
+        component: '{COMPONENT_LABEL}'
+    spec:
+      containers:
+      - name: app
+        image: {DEPLOYMENT_IMAGE}
+        imagePullPolicy: Always
+        env: []
+        ports:
+        - containerPort: {WRAPPER_PORT}
+        readinessProbe:
+          successThreshold: 1
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 20
+          httpGet:
+            path: "/"
+            port: {WRAPPER_PORT}
+            scheme: HTTP
+        resources:
+          limits:
+            cpu: {DEPLOYMENT_CPU_LIMIT}
+            memory: {DEPLOYMENT_MEMORY_LIMIT}
+          requests:
+            cpu: {DEPLOYMENT_CPU_REQUEST}
+            memory: {DEPLOYMENT_MEMORY_REQUEST}
