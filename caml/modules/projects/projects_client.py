@@ -1,7 +1,8 @@
 from kubernetes import client
 from kubernetes.client.exceptions import ApiException
 
-from caml.kube.consts import CAML_EXTENSION_GROUP, CAML_COMPUTE_NAMESPACE
+from caml.errors import CamlConflictError, CamlNotFoundError
+from caml.kube.consts import CAML_COMPUTE_NAMESPACE, CAML_EXTENSION_GROUP
 from caml.modules.projects.project import Project
 
 
@@ -30,11 +31,15 @@ class ProjectsClient:
             return response.items()
         except ApiException as e:
             if e.status == 409:
-                print("conflict!")
+                raise CamlConflictError("Project already exists")
 
     def list(self):
         response = self.project_client.list_namespaced_custom_object(**self.resource_args)
-        return response["items"]
+        projects = []
+        for item in response["items"]:
+            project = Project(name=item["metadata"]["name"], attributes=item["spec"])
+            projects.append(project)
+        return projects
 
     def get(self, name):
         return Project(name)
@@ -44,4 +49,4 @@ class ProjectsClient:
             self.project_client.delete_namespaced_custom_object(**self.resource_args, name=name)
         except ApiException as e:
             if e.status == 404:
-                print("not found!")
+                raise CamlNotFoundError("Project not found")

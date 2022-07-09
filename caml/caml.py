@@ -1,22 +1,17 @@
 import os
 import pathlib
 
-from kubernetes import client, config
+from kubernetes import client
 
-from caml.kube.utils import replace_yaml_placeholders
-from caml.kube.consts import CAML_INFRA_NAMESPACE, CAML_COMPUTE_NAMESPACE
-
-from caml.modules.projects import ProjectsClient
+from .config import CamlConfig
+from .kube.consts import CAML_COMPUTE_NAMESPACE, CAML_INFRA_NAMESPACE
+from .kube.utils import replace_yaml_placeholders
+from .modules.projects import ProjectsClient
 
 
 class Caml:
-    def __init__(self, kube_config):
-        # Init the kube config
-        if kube_config:
-            config.load_kube_config(config_file=kube_config)
-        else:
-            # To use the CLI/SDK inside of the cluster
-            config.load_incluster_config()
+    def __init__(self, kube_config=None):
+        self.config = CamlConfig(kube_config)
 
         self._init_clients()
 
@@ -32,13 +27,12 @@ class Caml:
         :return: None
         """
 
+        # Handle kwargs
+        caml_infra_namespace = kwargs.get("caml_infra_namespace", CAML_INFRA_NAMESPACE)
+        caml_compute_namespace = kwargs.get("caml_compute_namespace", CAML_COMPUTE_NAMESPACE)
+
         print("init kube config")
-        # Init the kube config
-        if kube_config:
-            config.load_kube_config(config_file=kube_config)
-        else:
-            # To use the CLI/SDK inside of the cluster
-            config.load_incluster_config()
+        CamlConfig(kube_config)
 
         core_api = client.CoreV1Api()
         api_reg_api = client.ApiextensionsV1Api()
@@ -46,13 +40,13 @@ class Caml:
 
         print("creating infra namespace")
         infra_namespace_body = replace_yaml_placeholders(f"{schema_path}/namespace.yml", {
-            "NAMESPACE_NAME": kwargs.get("caml_infra_namespace", CAML_INFRA_NAMESPACE)
+            "NAMESPACE_NAME": caml_infra_namespace
         })
         infra_namespace = core_api.create_namespace(body=infra_namespace_body)
 
         print("creating compute namespace")
         compute_namespace_body = replace_yaml_placeholders(f"{schema_path}/namespace.yml", {
-            "NAMESPACE_NAME": kwargs.get("caml_compute_namespace", CAML_COMPUTE_NAMESPACE)
+            "NAMESPACE_NAME": caml_compute_namespace
         })
         compute_namespace = core_api.create_namespace(body=compute_namespace_body)
 
@@ -76,12 +70,7 @@ class Caml:
         :return:
         """
         print("init kube config")
-        # Init the kube config
-        if kube_config:
-            config.load_kube_config(config_file=kube_config)
-        else:
-            # To use the CLI/SDK inside of the cluster
-            config.load_incluster_config()
+        CamlConfig(kube_config)
 
         # TODO: fix
         print("deleting caml")

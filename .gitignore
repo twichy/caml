@@ -130,3 +130,7 @@ dmypy.json
 
 # CAML specific
 sandbox.py
+
+# Server specific
+/server/static
+/server/build

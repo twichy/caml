@@ -8,6 +8,7 @@ class JupyterNotebook:
     def __init__(self, project, name, cpu=2, cpu_limit=2, memory=2, memory_limit=2):
         self.name = name
         self.project = project
+        self.resource_name = f"workspace-{self.project}-{self.name}"
 
         self.cpu = cpu
         self.cpu_limit = cpu_limit
@@ -19,12 +20,11 @@ class JupyterNotebook:
         self._create_service()
 
     def _create_deployment(self):
-        resource_yaml = "deployment.yml"
         placeholders = {
             "APP_LABEL": "jupyter-notebook",
             "PROJECT_LABEL": self.project,
             "COMPONENT_LABEL": "workspace",
-            "DEPLOYMENT_NAME": f"workspace-{self.project}-{self.name}",
+            "DEPLOYMENT_NAME": self.resource_name,
             "DEPLOYMENT_IMAGE": "jupyter/datascience-notebook",
 
             "WRAPPER_PORT": "8888",
@@ -35,25 +35,18 @@ class JupyterNotebook:
             "DEPLOYMENT_MEMORY_REQUEST": f"{self.memory}G",
         }
 
-        schema_path = os.path.join(pathlib.Path(__file__).parent, f"schemas/{resource_yaml}")
-        self.body = replace_yaml_placeholders(schema_path, placeholders)
+        schema_path = os.path.join(pathlib.Path(__file__).parent, "schemas/deployment.yaml")
+        self.deployment = replace_yaml_placeholders(schema_path, placeholders)
 
     def _create_service(self):
-        resource_yaml = "service.yml"
+        # TODO: change to LoadBalancer
         placeholders = {
-            "APP_LABEL": "jupyter-notebook",
-            "PROJECT_LABEL": self.project,
-            "COMPONENT_LABEL": "workspace",
-            "DEPLOYMENT_NAME": f"workspace-{self.project}-{self.name}",
-            "DEPLOYMENT_IMAGE": "jupyter/datascience-notebook",
+            "DEPLOYMENT_NAME": self.resource_name,
+            "SERVICE_TYPE": "ClusterIP",
 
             "WRAPPER_PORT": "8888",
-
-            "DEPLOYMENT_CPU_LIMIT": "2",
-            "DEPLOYMENT_CPU_REQUEST": "2",
-            "DEPLOYMENT_MEMORY_LIMIT": "2G",
-            "DEPLOYMENT_MEMORY_REQUEST": "2G",
+            "EXTERNAL_PORT": "80",
         }
 
-        schema_path = os.path.join(pathlib.Path(__file__).parent, f"schemas/{resource_yaml}")
-        self.body = replace_yaml_placeholders(schema_path, placeholders)
+        schema_path = os.path.join(pathlib.Path(__file__).parent, "schemas/service.yaml")
+        self.service = replace_yaml_placeholders(schema_path, placeholders)

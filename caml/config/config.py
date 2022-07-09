@@ -1,37 +1,27 @@
 import os
-import yaml
 
-CONFIG_FILE_NAME = "config.json"
-CONFIG_FOLDER_NAME = ".caml"
+from kubernetes import config
+
+CONFIG_FOLDER = os.path.join(os.path.expanduser("~"), ".caml")
+CONFIG_FILE_NAME = os.path.join(CONFIG_FOLDER, "config.json")
+CONFIG_KUBE_FILE_NAME = os.path.join(CONFIG_FOLDER, "caml-kube-config")
 
 
-class Config:
-    def __init__(self):
-        self.config_exists = False
-        self.config_folder_path = os.path.join(os.path.expanduser("~"), CONFIG_FOLDER_NAME)
-        self.config_file_path = os.path.join(self.config_folder_path, CONFIG_FILE_NAME)
+class CamlConfig:
+    def __init__(self, kube_config=None):
+        # Init the kube config globally
+        CamlConfig.load_kube_config(kube_config)
 
-        if os.path.exists(self.config_folder_path) and os.path.exists(self.config_file_path):
-            # Load the config file
-            config = yaml.safe_load(open(self.config_file_path, "r")) or {}
-
-            self._user = config.get("user", None)
-            self._token = config.get("token", None)
-            self._version = config.get("version", None)
-            self._caml_url = config.get("caml_url", None)
-
-    @property
-    def user(self):
-        return self._user
-
-    @property
-    def token(self):
-        return self._token
-
-    @property
-    def version(self):
-        return self._version
-
-    @property
-    def caml_url(self):
-        return self._caml_url
+    @staticmethod
+    def load_kube_config(kube_config=None):
+        """
+        Inits the kube config from either the given config, local setup or kubernetes cloud
+        :return: None
+        """
+        if kube_config:
+            config.load_kube_config(config_file=kube_config)
+        elif os.path.exists(CONFIG_KUBE_FILE_NAME):
+            config.load_kube_config(config_file=CONFIG_KUBE_FILE_NAME)
+        else:
+            # To use the CLI/SDK inside of the cluster
+            config.load_incluster_config()
