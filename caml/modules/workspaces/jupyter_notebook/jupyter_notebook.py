@@ -39,10 +39,9 @@ class JupyterNotebook:
         self.deployment = replace_yaml_placeholders(schema_path, placeholders)
 
     def _create_service(self):
-        # TODO: change to LoadBalancer
         placeholders = {
             "DEPLOYMENT_NAME": self.resource_name,
-            "SERVICE_TYPE": "ClusterIP",
+            "SERVICE_TYPE": "LoadBalancer",
 
             "WRAPPER_PORT": "8888",
             "EXTERNAL_PORT": "80",

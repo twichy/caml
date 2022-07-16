@@ -32,7 +32,7 @@ class WorkspacesClient:
                 raise e
 
         try:
-            self.core_api.create_namespaced_service(namespace=CAML_COMPUTE_NAMESPACE, body=workspace.service)
+            hue = self.core_api.create_namespaced_service(namespace=CAML_COMPUTE_NAMESPACE, body=workspace.service)
         except ApiException as e:
             if e.status == 409:
                 raise Exception("duplicato")

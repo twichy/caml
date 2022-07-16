@@ -57,7 +57,7 @@ app.add_middleware(
 
 if __name__ == "__main__":
     uvicorn.run(
-        "main:app",
+        "server:app",
         host=CONFIG["CAML_DOMAIN"],
         port=int(CONFIG["CAML_PORT"]),
         reload=True

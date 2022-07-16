@@ -7,6 +7,6 @@ spec:
     app: '{DEPLOYMENT_NAME}'
   ports:
     - protocol: TCP
-      port: { EXTERNAL_PORT }
-      targetPort: { WRAPPER_PORT }
-  type: { SERVICE_TYPE }
+      port: {EXTERNAL_PORT}
+      targetPort: {WRAPPER_PORT}
+  type: '{SERVICE_TYPE}'
