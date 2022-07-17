@@ -1,8 +1,13 @@
 :root {
     --bg-color: #f4f6f9;
     --surface-color: #FFFFFF;
-    --primary-color: #FFFFFF;
+    --primary-color: #F79F1F;
     --secondary-color: #536390;
+
+    --surface-separator-color: #EEEEEE;
+    --on-surface-color: #2c2c2c;
+    --on-primary-color: #FFFFFF;
+
     --font-color: #424242;
     --heading-color: #292922;
 }
