@@ -1,9 +1,15 @@
 <script setup>
 
 import HomeIcon from 'vue-material-design-icons/Home.vue';
+import CogIcon from 'vue-material-design-icons/Cog.vue';
 import UserIcon from 'vue-material-design-icons/Account.vue';
 import LogoutIcon from 'vue-material-design-icons/Logout.vue';
-import ThemeToggle from '@/components/ThemeToggle.vue';</script>
+import ThemeToggle from '@/components/ThemeToggle.vue';
+import FileCodeIcon from 'vue-material-design-icons/FileCode.vue';
+import ViewDashboardIcon from 'vue-material-design-icons/ViewDashboard.vue';
+import ToyBrickIcon from 'vue-material-design-icons/ToyBrick.vue';
+import PlayCircleIcon from 'vue-material-design-icons/PlayCircle.vue';
+import AccountMultipleIcon from 'vue-material-design-icons/AccountMultiple.vue';</script>
 
 <template>
   <div class="sidebar">
@@ -25,20 +31,19 @@ import ThemeToggle from '@/components/ThemeToggle.vue';</script>
     </div>
 
     <nav class="main-nav">
-      <RouterLink to="/">
-        <HomeIcon :size="15" />
-        Home
-      </RouterLink>
-      <RouterLink to="/about">Projects</RouterLink>
-      <RouterLink to="/about">Plugins</RouterLink>
-      <RouterLink to="/about">Dashboard</RouterLink>
+      <RouterLink to="/"><HomeIcon :size="15" /> Overview</RouterLink>
+      <RouterLink to="/about"><PlayCircleIcon :size="15" /> Jobs</RouterLink>
+      <RouterLink to="/about"><FileCodeIcon :size="15" /> Workspaces</RouterLink>
+      <RouterLink to="/about"><FileCodeIcon :size="15" /> Endpoints</RouterLink>
     </nav>
 
     <nav class="admin-nav">
       <h2>MANAGE</h2>
 
-      <RouterLink to="/about">Users</RouterLink>
-      <RouterLink to="/about">Settings</RouterLink>
+      <RouterLink to="/about"><AccountMultipleIcon :size="15" /> Access</RouterLink>
+      <RouterLink to="/about"><ToyBrickIcon :size="15" /> Plugins</RouterLink>
+      <RouterLink to="/about"><CogIcon :size="15" /> Settings</RouterLink>
+      <RouterLink to="/dashboard"><ViewDashboardIcon :size="15" /> Dashboard</RouterLink>
     </nav>
 
 
@@ -101,7 +106,7 @@ import ThemeToggle from '@/components/ThemeToggle.vue';</script>
 
     a {
       display: flex;
-      padding: 16px;
+      padding: 12px 16px;
       margin: 4px 0;
       font-size: 15px;
       text-align: left;

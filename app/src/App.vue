@@ -26,7 +26,7 @@ import Sidebar from '@/components/Sidebar.vue';</script>
 
   &::before {
     content: '';
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
